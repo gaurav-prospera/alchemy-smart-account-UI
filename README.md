@@ -42,6 +42,8 @@ cp .env.example .env.local      # create if missing
 | ------------------------------- | ----------------------------------------------------------------------------------------------------------- |
 | `NEXT_PUBLIC_ALCHEMY_API_KEY`   | API key for your Alchemy [app](https://dashboard.alchemy.com/services/smart-wallets/configuration)          |
 | `NEXT_PUBLIC_ALCHEMY_POLICY_ID` | Gas Manager policy ID for [sponsorship](https://dashboard.alchemy.com/services/smart-wallets/configuration) |
+| `NEXT_PUBLIC_CHAIN_ID` | Chain Id  |
+
 
 If instead you want to set up your own configurations from scratch you should:
 
