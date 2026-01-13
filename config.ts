@@ -35,25 +35,25 @@ const uiConfig: AlchemyAccountsUIConfig = {
         { type: "social", authProviderId: "google", mode: "popup" },
         { type: "social", authProviderId: "facebook", mode: "popup" },
         { type: "social", authProviderId: "twitch", mode: "popup" },
-        { 
-          type: "social", 
-          authProviderId: "auth0", 
-          mode: "popup", 
-          auth0Connection: "discord", 
-          displayName: "Discord", 
-          logoUrl: "/images/discord.svg", 
-          scope: "openid profile" 
-        },
-        { 
-          type: "social", 
-          authProviderId: "auth0", 
-          mode: "popup", 
-          auth0Connection: "twitter", 
-          displayName: "Twitter", 
-          logoUrl: "/images/twitter.svg", 
-          logoUrlDark: "/images/twitter-dark.svg", 
-          scope: "openid profile" 
-        },
+        // { 
+        //   type: "social", 
+        //   authProviderId: "auth0", 
+        //   mode: "popup", 
+        //   auth0Connection: "discord", 
+        //   displayName: "Discord", 
+        //   logoUrl: "/images/discord.svg", 
+        //   scope: "openid profile" 
+        // },
+        // { 
+        //   type: "social", 
+        //   authProviderId: "auth0", 
+        //   mode: "popup", 
+        //   auth0Connection: "twitter", 
+        //   displayName: "Twitter", 
+        //   logoUrl: "/images/twitter.svg", 
+        //   logoUrlDark: "/images/twitter-dark.svg", 
+        //   scope: "openid profile" 
+        // },
       ],
       [
         {

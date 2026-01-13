@@ -1,7 +1,7 @@
 import { useSmartAccountClient, useAlchemyAccountContext, useChain } from "@account-kit/react";
 import { useQuery } from "@tanstack/react-query";
 import { usePublicClient } from "wagmi";
-import { type Address } from "viem";
+import { type Address, createPublicClient, http } from "viem";
 import { NFT_MINTABLE_ABI_PARSED } from "@/lib/constants";
 
 interface UseReadNFTUriParams {
@@ -38,15 +38,30 @@ export const useReadNFTData = (props: UseReadNFTUriParams) => {
         throw new Error("Contract address is not defined for queryFn.");
       }
       
-      if (isExternalWallet && publicClient) {
-        // For external wallets, use public client
-        const baseUriString = await publicClient.readContract({
-          address: contractAddress,
-          abi: NFT_MINTABLE_ABI_PARSED,
-          functionName: "baseURI",
-        });
-        return baseUriString as string;
-      } else if (client) {
+      // Try external wallet first, then smart account client
+      if (isExternalWallet) {
+        // For external wallets, use public client or create one from chain
+        let readClient = publicClient;
+        
+        if (!readClient && chain) {
+          // Create a public client from chain config if wagmi's publicClient is not ready
+          readClient = createPublicClient({
+            chain,
+            transport: http(),
+          });
+        }
+        
+        if (readClient) {
+          const baseUriString = await readClient.readContract({
+            address: contractAddress,
+            abi: NFT_MINTABLE_ABI_PARSED,
+            functionName: "baseURI",
+          });
+          return baseUriString as string;
+        }
+      }
+      
+      if (client) {
         // For smart accounts, use smart account client
         const baseUriString = await client.readContract({
           address: contractAddress,
@@ -55,9 +70,10 @@ export const useReadNFTData = (props: UseReadNFTUriParams) => {
         });
         return baseUriString as string;
       }
+      
       throw new Error("Client not available");
     },
-    enabled: (!!client || !!publicClient) && !!contractAddress,
+    enabled: !!contractAddress && (!!client || !!publicClient || !!chain),
   });
 
   // Query for NFT count - use wagmi for external wallets, smart account client for embedded wallets
@@ -81,15 +97,27 @@ export const useReadNFTData = (props: UseReadNFTUriParams) => {
         throw new Error("Owner address is not defined for queryFn.");
       }
       
-      if (isExternalWallet && publicClient) {
-        // For external wallets, use public client
-        const balance = await publicClient.readContract({
-          address: contractAddress,
-          abi: NFT_MINTABLE_ABI_PARSED,
-          functionName: "balanceOf",
-          args: [ownerAddress],
-        });
-        return Number(balance);
+      if (isExternalWallet) {
+        // For external wallets, use public client or create one from chain
+        let readClient = publicClient;
+        
+        if (!readClient && chain) {
+          // Create a public client from chain config if wagmi's publicClient is not ready
+          readClient = createPublicClient({
+            chain,
+            transport: http(),
+          });
+        }
+        
+        if (readClient) {
+          const balance = await readClient.readContract({
+            address: contractAddress,
+            abi: NFT_MINTABLE_ABI_PARSED,
+            functionName: "balanceOf",
+            args: [ownerAddress],
+          });
+          return Number(balance);
+        }
       } else if (client) {
         // For smart accounts, use smart account client
         const balance = await client.readContract({
@@ -102,7 +130,7 @@ export const useReadNFTData = (props: UseReadNFTUriParams) => {
       }
       throw new Error("Client not available");
     },
-    enabled: (!!client || !!publicClient) && !!contractAddress && !!ownerAddress,
+    enabled: !!contractAddress && !!ownerAddress && (!!client || !!publicClient || !!chain),
   });
 
   return {

@@ -23,9 +23,12 @@ import { useMint } from "@/app/hooks/useMintNFT";
 import { useSmartAccountClient } from "@account-kit/react";
 import { useNftContractAddress } from "@/app/hooks/useNftContractAddress";
 
+const FALLBACK_IMAGE_URL = "https://images.unsplash.com/photo-1644143379190-08a5f055de1d?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDF8fHxlbnwwfHx8fHw%3D";
+
 export default function NftMintCard() {
   const [isImageLoading, setIsImageLoading] = useState(true);
   const [showSuccess, setShowSuccess] = useState(true);
+  const [imageError, setImageError] = useState(false);
   const nftContractAddress = useNftContractAddress();
 
   const { client, address } = useSmartAccountClient({});
@@ -59,6 +62,14 @@ export default function NftMintCard() {
     }
   }, [transactionUrl]);
 
+  // Reset image error state when URI changes
+  useEffect(() => {
+    if (uri) {
+      setImageError(false);
+      setIsImageLoading(true);
+    }
+  }, [uri]);
+
   return (
     <Card className="overflow-hidden">
       <CardHeader className="pb-0">
@@ -89,14 +100,21 @@ export default function NftMintCard() {
           )}
           <div className="aspect-[4/3] md:aspect-[16/9] w-full relative">
             <Image
-              src={uri ?? ""}
+              src={imageError ? FALLBACK_IMAGE_URL : (uri ?? "")}
               alt="NFT Image"
               fill
               className={cn(
                 "object-cover transition-opacity duration-500",
                 isImageLoading ? "opacity-0" : "opacity-100"
               )}
-              onLoad={() => setIsImageLoading(false)}
+              onLoad={() => {
+                setIsImageLoading(false);
+                setImageError(false);
+              }}
+              onError={() => {
+                setIsImageLoading(false);
+                setImageError(true);
+              }}
             />
           </div>
           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
