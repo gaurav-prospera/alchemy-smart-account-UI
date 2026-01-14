@@ -5,6 +5,7 @@ import { Inter } from "next/font/google";
 import { headers } from "next/headers";
 import "./globals.css";
 import { Providers } from "./providers";
+import Chatbot from "./components/chatbot";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,7 +29,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Providers initialState={initialState}>{children}</Providers>
+        <Providers initialState={initialState}>
+          {children}
+          <Chatbot />
+        </Providers>
       </body>
     </html>
   );

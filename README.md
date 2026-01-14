@@ -8,6 +8,7 @@ Use this template to get started with **embedded smart wallets** using [Alchemy 
 - Flexible, secure, and cheap smart accounts
 - Gasless transactions powered by ERC-4337 Account Abstraction
 - One‑click NFT mint (no ETH required)
+- AI-powered chatbot for user support (OpenAI GPT-4o-mini)
 - Server‑side rendering ready – session persisted with cookies
 - TailwindCSS + shadcn/ui components, React Query, TypeScript
 
@@ -37,6 +38,7 @@ cp .env.example .env.local      # create if missing
 # add NEXT_PUBLIC_ALCHEMY_API_KEY=...
 # add NEXT_PUBLIC_ALCHEMY_POLICY_ID=...
 # add NEXT_PUBLIC_CHAIN_ID=...
+# add OPENAI_API_KEY=... (optional, for chatbot feature)
 ```
 
 | Variable                        | Purpose                                                                                                     |
@@ -44,6 +46,7 @@ cp .env.example .env.local      # create if missing
 | `NEXT_PUBLIC_ALCHEMY_API_KEY`   | API key for your Alchemy [app](https://dashboard.alchemy.com/services/smart-wallets/configuration)          |
 | `NEXT_PUBLIC_ALCHEMY_POLICY_ID` | Gas Manager policy ID for [sponsorship](https://dashboard.alchemy.com/services/smart-wallets/configuration) |
 | `NEXT_PUBLIC_CHAIN_ID` | Chain Id  |
+| `OPENAI_API_KEY` | OpenAI API key for the chatbot feature (get from [OpenAI Platform](https://platform.openai.com/api-keys)) |
 
 
 If instead you want to set up your own configurations from scratch you should:
@@ -70,11 +73,29 @@ See what else you can do with [smart wallets](https://www.alchemy.com/docs/walle
 
 ```
 app/           # Next.js pages & components
+  api/chat/     # Chatbot API route (OpenAI integration)
 components/ui/ # shadcn/ui primitives
 lib/           # constants & helpers
 config.ts      # Account Kit + Gas Sponsorship setup
 tailwind.config.ts
 ```
+
+## 🤖 AI Chatbot
+
+The app includes an AI-powered chatbot in the bottom-right corner powered by OpenAI's GPT-4o-mini model. The chatbot helps users with:
+
+- Smart wallet features and functionality
+- Wallet connections (web2 and web3)
+- Transaction processes
+- Security best practices
+- App usage questions
+
+**Setup:**
+1. Get your OpenAI API key from [OpenAI Platform](https://platform.openai.com/api-keys)
+2. Add `OPENAI_API_KEY=your_key_here` to your `.env.local` file
+3. The chatbot will appear automatically in the bottom-right corner
+
+**Note:** The chatbot is optional. If `OPENAI_API_KEY` is not set, the chatbot button will still appear but API calls will fail gracefully.
 
 ## 🏗️ How it works
 

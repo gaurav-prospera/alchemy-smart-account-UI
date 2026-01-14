@@ -44,14 +44,29 @@ export default function LoginPage() {
       <CardContent className={cn("space-y-6 pb-8")}>
         <Button
           size="lg"
-          onClick={() => openAuthModal()}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Login button clicked", { openAuthModal, isLoggingIn });
+            try {
+              if (!isLoggingIn && openAuthModal) {
+                openAuthModal();
+              } else {
+                console.error("openAuthModal is not available or isLoggingIn is true", { openAuthModal, isLoggingIn });
+              }
+            } catch (error) {
+              console.error("Error opening auth modal:", error);
+            }
+          }}
           disabled={isLoggingIn}
+          type="button"
           className={cn(
             "w-full h-12 text-base font-medium bg-gradient-to-r from-gray-600/80 to-gray-800/80",
             "hover:from-gray-700/90 hover:to-gray-900/90 border-0 shadow-lg hover:shadow-xl",
             "dark:from-gray-300/20 dark:to-gray-500/30 dark:hover:from-gray-200/30 dark:hover:to-gray-400/40",
             "backdrop-blur-sm text-white dark:text-gray-100",
-            "transition-all duration-200"
+            "transition-all duration-200",
+            "cursor-pointer"
           )}
         >
           {isLoggingIn ? (
